@@ -30,7 +30,7 @@ const Step2 = ({ defaultValues, onSubmit }) => {
   return (
     <div className="step-content">
       <h2>联系信息</h2>
-      <form onSubmit={handleSubmit(handleFormSubmit)}>
+      <form id="step-2-form" onSubmit={handleSubmit(handleFormSubmit)}>
         <div className="form-grid">
           <FormItem label="邮箱" required error={errors.email}>
             <input

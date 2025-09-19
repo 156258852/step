@@ -34,7 +34,7 @@ const Step1 = ({ defaultValues, onSubmit }) => {
   return (
     <div className="step-content">
       <h2>个人信息</h2>
-      <form  onSubmit={handleSubmit(handleFormSubmit, handleFormError)}>
+      <form id="step-1-form" onSubmit={handleSubmit(handleFormSubmit, handleFormError)}>
         <div className="form-grid">
           <FormItem label="姓名" required error={errors.firstName}>
             <input
