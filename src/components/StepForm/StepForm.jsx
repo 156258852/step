@@ -1,19 +1,21 @@
 import { useState } from 'react';
 import StepIndicator from './StepIndicator';
+import Step0 from './Step0';
 import Step1 from './Step1';
 import Step2 from './Step2';
 import Step3 from './Step3';
 import './StepForm.css';
 
 const StepForm = () => {
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(0);
   const [stepData, setStepData] = useState({
+    step0: {},
     step1: {},
     step2: {},
     step3: {}
   });
 
-  const totalSteps = 3;
+  const totalSteps = 4;
 
   // 处理步骤数据保存
   const handleStepDataSave = (step, data) => {
@@ -27,7 +29,7 @@ const StepForm = () => {
   const nextStep = (stepData) => {
     // 保存当前步骤数据
     handleStepDataSave(currentStep, stepData);
-    
+
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1);
     }
@@ -35,7 +37,7 @@ const StepForm = () => {
 
   // 上一步
   const prevStep = () => {
-    if (currentStep > 1) {
+    if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
     }
   };
@@ -44,8 +46,9 @@ const StepForm = () => {
   const handleFinalSubmit = (stepData) => {
     // 保存最后一步数据
     handleStepDataSave(currentStep, stepData);
-    
+
     const allData = {
+      ...stepData.step0,
       ...stepData.step1,
       ...stepData.step2,
       ...stepData
@@ -57,19 +60,28 @@ const StepForm = () => {
   // 步骤配置
   const stepConfigs = [
     {
+      id: 0,
+      component: Step0,
+      onSubmit: nextStep,
+      title: '自定义组件演示'
+    },
+    {
       id: 1,
       component: Step1,
-      onSubmit: nextStep
+      onSubmit: nextStep,
+      title: '个人信息'
     },
     {
       id: 2,
       component: Step2,
-      onSubmit: nextStep
+      onSubmit: nextStep,
+      title: '地址信息'
     },
     {
       id: 3,
       component: Step3,
-      onSubmit: handleFinalSubmit
+      onSubmit: handleFinalSubmit,
+      title: '确认信息'
     }
   ];
 
@@ -77,9 +89,9 @@ const StepForm = () => {
   const renderStep = () => {
     const config = stepConfigs.find(step => step.id === currentStep);
     if (!config) return null;
-    
+
     const { component: Component, onSubmit } = config;
-    
+
     return (
       <Component
         defaultValues={stepData[`step${currentStep}`]}
@@ -93,27 +105,27 @@ const StepForm = () => {
     <div className="step-form">
       <div className="step-form-container">
         <h1 className="step-form-title">多步骤表单</h1>
-        
-        <StepIndicator 
+
+        <StepIndicator
           currentStep={currentStep}
         />
 
         <div className="step-form-content">
           {renderStep()}
-          
+
           <div className="step-form-actions">
-            {currentStep > 1 && (
-              <button 
-                type="button" 
+            {currentStep > 0 && (
+              <button
+                type="button"
                 onClick={prevStep}
                 className="btn btn-secondary"
               >
                 上一步
               </button>
             )}
-            
-            {currentStep < totalSteps ? (
-              <button 
+
+            {currentStep < totalSteps - 1 ? (
+              <button
                 type="submit"
                 form={`step-${currentStep}-form`}
                 className="btn btn-primary"
@@ -121,7 +133,7 @@ const StepForm = () => {
                 下一步
               </button>
             ) : (
-              <button 
+              <button
                 type="submit"
                 form={`step-${currentStep}-form`}
                 className="btn btn-success"
